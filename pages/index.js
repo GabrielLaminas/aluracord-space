@@ -56,7 +56,7 @@ export default function PaginaInicial() {
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.primary[500],
+          backgroundColor: "#434860",
           backgroundImage: 'url(https://github.com/GabrielLaminas/aluracord-space/blob/main/public/bg-body.png?raw=true)',
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
         }}
@@ -70,7 +70,7 @@ export default function PaginaInicial() {
             width: '100%', maxWidth: '375px',
             borderRadius: '8px', padding: '32px', margin: '16px',
             boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-            backgroundColor: '#1d1d2a',
+            backgroundColor: '#323248',
           }}
         >
 
