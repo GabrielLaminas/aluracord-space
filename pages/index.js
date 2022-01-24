@@ -70,7 +70,7 @@ export default function PaginaInicial() {
             width: '100%', maxWidth: '375px',
             borderRadius: '8px', padding: '32px', margin: '16px',
             boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-            backgroundColor: '#323248',
+            backgroundColor: 'rgba(50, 50, 72, 0.9)',
           }}
         >
 
