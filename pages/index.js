@@ -32,8 +32,6 @@ export default function PaginaInicial() {
       .catch(e => Error(e))
   }, [user]);
 
-  console.log(dados)
-
   function handleChange({target}){
     setUser(target.value);
   }
@@ -118,7 +116,11 @@ export default function PaginaInicial() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              flexDirection: 'row',
+              flexDirection: {
+                xs: 'column',
+                sm: 'row'
+              },
+              gap: '8px'
             }}
           >
             <Box styleSheet={{
@@ -127,7 +129,7 @@ export default function PaginaInicial() {
               gap: '5px',
             }}>
               <Icon 
-                name="FaUsers" 
+                name="FaUserFriends" 
                 label="Icon Component" 
                 styleSheet={{ color: appConfig.theme.colors.neutrals[200]}}
               />
@@ -140,7 +142,26 @@ export default function PaginaInicial() {
                 {dados["followers"] + ' followers - ' + dados["following"] + ' following' }
               </Text> 
             </Box>
-          
+            
+            <Box styleSheet={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+            }}>
+              <Icon 
+                name="FaRegBookmark" 
+                label="Icon Component" 
+                styleSheet={{ color: appConfig.theme.colors.neutrals[200]}}
+              />
+              <Text 
+                styleSheet={{
+                  fontSize: '12px',
+                  color: appConfig.theme.colors.neutrals[300]
+                }}
+              >
+                {dados["public_repos"] + ' repo'}
+              </Text> 
+            </Box>
           </Box> 
           {/*Infos*/}
 
@@ -152,7 +173,7 @@ export default function PaginaInicial() {
           >
       
             <TextField
-              placeholder='user'
+              placeholder='user do github'
               fullWidth
               value={user}
               onChange={handleChange}
