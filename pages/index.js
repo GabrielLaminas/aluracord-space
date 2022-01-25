@@ -22,9 +22,16 @@ function Titulo(props) {
 
 export default function PaginaInicial() {
   const [user, setUser] = React.useState('GabrielLaminas');
+  const [disable, setDisable] = React.useState(false)
   const roteamento = useRouter();
   //api: https://api.github.com/users/gabriellaminas
   
+  console.log(roteamento)
+
+  function handleChange({target}){
+    setUser(target.value);
+  }
+
   function handleSubimitChat(event){
     event.preventDefault();
     roteamento.push('/chat');
@@ -107,7 +114,8 @@ export default function PaginaInicial() {
               placeholder='user'
               fullWidth
               value={user}
-              onChange={({target}) => setUser(target.value)}
+              
+              onChange={handleChange}
               textFieldColors={{
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
