@@ -145,14 +145,19 @@ export default function PaginaInicial() {
                 label="Icon Component" 
                 styleSheet={{ color: appConfig.theme.colors.neutrals[200]}}
               />
-              <Text 
+              {dados && (
+                <Text 
                 styleSheet={{
                   fontSize: '12px',
                   color: appConfig.theme.colors.neutrals[300]
                 }}
-              >
-                {dados && (dados["followers"] && dados["following"]) ? dados["followers"] + ' followers - ' + dados["following"] + ' following' : '-' }
+                >
+                { dados["followers"] || dados["following"]
+                  ? dados["followers"] + ' followers - ' + dados["following"] + ' following'
+                  : '-'}
               </Text> 
+              )}
+              
             </Box>
             
             <Box styleSheet={{
