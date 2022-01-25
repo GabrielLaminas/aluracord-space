@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 export default function PaginaErro(){
   const roteamento = useRouter();
-  console.log(roteamento)
+  
   return (
     <>
       <Box

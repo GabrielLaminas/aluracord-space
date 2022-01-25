@@ -1,4 +1,4 @@
-import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import { Box, Button, Text, TextField, Image, Icon } from '@skynexui/components';
 import { useRouter } from 'next/router';
 import React from 'react';
 import appConfig from '../config.json';
@@ -22,11 +22,17 @@ function Titulo(props) {
 
 export default function PaginaInicial() {
   const [user, setUser] = React.useState('GabrielLaminas');
-  const [disable, setDisable] = React.useState(false)
+  const [dados, setDados] = React.useState({});
   const roteamento = useRouter();
-  //api: https://api.github.com/users/gabriellaminas
-  
-  console.log(roteamento)
+
+  React.useEffect(() => {
+    fetch(`https://api.github.com/users/${user}`)
+      .then(response => response.json())
+      .then(resposta => setDados(resposta))
+      .catch(e => Error(e))
+  }, [user]);
+
+  console.log(dados)
 
   function handleChange({target}){
     setUser(target.value);
@@ -64,13 +70,16 @@ export default function PaginaInicial() {
 
           <Text 
             variant="body3" 
-            styleSheet={{ marginTop: '16px', color: appConfig.theme.colors.neutrals[300] }}>
+            styleSheet={{ 
+              marginTop: '16px', 
+              color: appConfig.theme.colors.neutrals[300] 
+            }}>
             {appConfig.name}
           </Text>
 
           <Box
             styleSheet={{
-              margin: '32px 0',
+              margin: '32px 0 16px 0',
               position: 'relative',
               overflow: 'hidden',
               borderRadius: '50%'
@@ -103,6 +112,38 @@ export default function PaginaInicial() {
             </Text>
           </Box>
 
+              {/*Infos*/}
+          <Box
+            styleSheet={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            }}
+          >
+            <Box styleSheet={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+            }}>
+              <Icon 
+                name="FaUsers" 
+                label="Icon Component" 
+                styleSheet={{ color: appConfig.theme.colors.neutrals[200]}}
+              />
+              <Text 
+                styleSheet={{
+                  fontSize: '12px',
+                  color: appConfig.theme.colors.neutrals[300]
+                }}
+              >
+                {dados["followers"] + ' followers - ' + dados["following"] + ' following' }
+              </Text> 
+            </Box>
+          
+          </Box> 
+          {/*Infos*/}
+
           {/*Formulário*/}
           <Box 
             as="form" 
@@ -114,7 +155,6 @@ export default function PaginaInicial() {
               placeholder='user'
               fullWidth
               value={user}
-              
               onChange={handleChange}
               textFieldColors={{
                 neutral: {
@@ -123,6 +163,9 @@ export default function PaginaInicial() {
                   mainColorHighlight: '#7289D9',
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
+              }}
+              styleSheet={{
+                margin: '24px 0 0 0'
               }}
             />
 
