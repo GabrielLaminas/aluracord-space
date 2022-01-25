@@ -29,7 +29,6 @@ export default function PaginaInicial() {
     fetch(`https://api.github.com/users/${user}`)
       .then(response => response.json())
       .then(resposta => setDados(resposta))
-      .catch(e => Error(e))
   }, [user]);
 
   function handleChange({target}){
@@ -74,7 +73,8 @@ export default function PaginaInicial() {
             }}>
             {appConfig.name}
           </Text>
-
+          
+          {/*Avatar*/}
           <Box
             styleSheet={{
               margin: '32px 0 16px 0',
@@ -90,7 +90,7 @@ export default function PaginaInicial() {
                 height: '200px',
                 borderRadius: '50%',
               }}
-              src={`https://github.com/${user}.png`}
+              src={`${user.length > 2 ? `https://github.com/${user}.png` : 'https://github.com/gabriel.png'}`}
             />
 
             <Text
@@ -100,15 +100,16 @@ export default function PaginaInicial() {
                 bottom: '0px',
                 color: appConfig.theme.colors.neutrals["000"],
                 backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                padding: '8px 0 16px 0',
+                padding: '8px 0 20px 0',
                 width: '100%',
                 textAlign: 'center',
                 fontWeight: '600'
               }}
             >
-              {user}
+              {`${user.length > 2 ? user : 'user do github'}`}
             </Text>
           </Box>
+          {/*Avatar*/}
 
           {/*Infos*/}
           <Box
