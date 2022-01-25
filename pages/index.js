@@ -110,7 +110,7 @@ export default function PaginaInicial() {
             </Text>
           </Box>
 
-              {/*Infos*/}
+          {/*Infos*/}
           <Box
             styleSheet={{
               display: 'flex',
