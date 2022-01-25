@@ -22,13 +22,21 @@ function Titulo(props) {
 
 export default function PaginaInicial() {
   const [user, setUser] = React.useState('GabrielLaminas');
-  const [dados, setDados] = React.useState({});
+  const [dados, setDados] = React.useState(null);
   const roteamento = useRouter();
 
   React.useEffect(() => {
-    fetch(`https://api.github.com/users/${user}`)
-      .then(response => response.json())
-      .then(resposta => setDados(resposta))
+    async function initFetch(){
+      try{
+        const response = await fetch(`https://api.github.com/users/${user}`);
+        const userJson = await response.json();
+        setDados(userJson); 
+      }
+      catch(e){
+        console.log(Error(e))
+      }
+    }
+    initFetch();
   }, [user]);
 
   function handleChange({target}){
@@ -80,7 +88,7 @@ export default function PaginaInicial() {
               margin: '32px 0 16px 0',
               position: 'relative',
               overflow: 'hidden',
-              borderRadius: '50%'
+              borderRadius: '50%',
             }}
           
           >
@@ -90,7 +98,10 @@ export default function PaginaInicial() {
                 height: '200px',
                 borderRadius: '50%',
               }}
-              src={`${user.length > 2 ? `https://github.com/${user}.png` : 'https://github.com/gabriel.png'}`}
+              src={
+                `${user.length > 2 
+                  ? `https://github.com/${user}.png` 
+                : 'https://raw.githubusercontent.com/GabrielLaminas/aluracord-space/19aa1a8c044da3ae427db7a5510fac85c9773f2c/public/undraw_male_avatar.svg'}`}
             />
 
             <Text
@@ -99,14 +110,14 @@ export default function PaginaInicial() {
                 position: 'absolute',
                 bottom: '0px',
                 color: appConfig.theme.colors.neutrals["000"],
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                padding: '8px 0 20px 0',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                padding: '8px 0 16px 0',
                 width: '100%',
                 textAlign: 'center',
                 fontWeight: '600'
               }}
             >
-              {`${user.length > 2 ? user : 'user do github'}`}
+              {`${user.length > 2 ? user : 'desconhecido'}`}
             </Text>
           </Box>
           {/*Avatar*/}
@@ -140,7 +151,7 @@ export default function PaginaInicial() {
                   color: appConfig.theme.colors.neutrals[300]
                 }}
               >
-                {dados["followers"] + ' followers - ' + dados["following"] + ' following' }
+                {dados && (dados["followers"] && dados["following"]) ? dados["followers"] + ' followers - ' + dados["following"] + ' following' : '-' }
               </Text> 
             </Box>
             
@@ -151,7 +162,8 @@ export default function PaginaInicial() {
             }}>
               <Icon 
                 name="FaRegBookmark" 
-                label="Icon Component" 
+                label="Icon Component"
+                size="1.4ch" 
                 styleSheet={{ color: appConfig.theme.colors.neutrals[200]}}
               />
               <Text 
@@ -160,7 +172,7 @@ export default function PaginaInicial() {
                   color: appConfig.theme.colors.neutrals[300]
                 }}
               >
-                {dados["public_repos"] + ' repo'}
+                {dados && dados["public_repos"] ? dados["public_repos"] + ' repo' : '-'}
               </Text> 
             </Box>
           </Box> 
