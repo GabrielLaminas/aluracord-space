@@ -13,7 +13,7 @@ export default function PaginaDoChat() {
 
   function handlePress(event){
     const enviar = event.key;
-
+    
     if(enviar === 'Enter' || enviar === 'NumpadEnter'){
       event.preventDefault();
       handleNovaMensagem(mensagem);
@@ -21,13 +21,15 @@ export default function PaginaDoChat() {
   }
 
   function handleNovaMensagem(novaMensagem){
-    const mensagemUsuario = {
-      id: listDeMensagem.length + 1,
-      de: 'gabriellaminas',
-      texto: novaMensagem
+    if(novaMensagem.length >= 1){
+      const mensagemUsuario = {
+        id: listDeMensagem.length + 1,
+        de: 'gabriellaminas',
+        texto: novaMensagem
+      }
+      setListDeMensagem([mensagemUsuario, ...listDeMensagem])
+      setMensagem('');
     }
-    setListDeMensagem([mensagemUsuario, ...listDeMensagem])
-    setMensagem('');
   }
 
   return (
@@ -54,7 +56,7 @@ export default function PaginaDoChat() {
             height: '100%',
             maxWidth: '95%',
             maxHeight: '95vh',
-            padding: '32px',
+            padding: {xs: '8px', md: '32px'}
           }}
         >
         
@@ -70,10 +72,10 @@ export default function PaginaDoChat() {
             backgroundColor: 'rgba(58, 63, 85, 0.6)',
             flexDirection: 'column',
             borderRadius: '5px',
-            padding: '24px',
+            padding: {xs: '8px', md: '24px'}
         }}
         >
-          <MessageList mensagens={listDeMensagem} />
+          <MessageList mensagens={listDeMensagem} setListDeMensagem={setListDeMensagem}/>
 
           {/*form*/}
           <Box
@@ -98,7 +100,7 @@ export default function PaginaDoChat() {
                   borderRadius: '5px',
                   padding: '6px 8px',
                   backgroundColor: 'rgba(24, 28, 37, 0.8)',
-                  marginRight: '16px',
+                  marginRight: {xs: '8px', md: '16px'},
                   color: appConfig.theme.colors.neutrals[200],
               }}
             />
@@ -154,6 +156,14 @@ function Header() {
 }
 
 function MessageList(props) {
+
+  function removerMensagem(id){
+    //console.log(id) ta saindo o id que eu clico
+    const mensagemRemovida = props.mensagens.filter((mensagem) => id !== mensagem.id)
+    //console.log(mensagemRemovida) ta saindo o novo array com valores excluidos
+    props.setListDeMensagem(mensagemRemovida)
+  }
+
   return (
     <Box
       tag="ul"
@@ -176,6 +186,7 @@ function MessageList(props) {
               marginBottom: '12px',
               cursor: 'pointer',
               wordBreak: 'break-word',
+              fontSize: {xs: '14px', md: '16px'},
               hover: {
                   backgroundColor: 'rgba(145, 163, 182, 0.09)',
               }
@@ -197,22 +208,27 @@ function MessageList(props) {
                 
                 <Image
                   styleSheet={{
-                    width: '45px',
-                    height: '45px',
+                    width: {xs: '28px', md: '45px'},
+                    height: {xs: '28px', md: '45px'},
                     borderRadius: '50%',
-                    marginRight: '16px',
+                    marginRight: {xs: '10px', md: '16px'}, 
                   }}
                   src={`https://github.com/gabriellaminas.png`}
                 />
 
-                <Text tag="strong">
+                <Text 
+                  tag="strong"
+                  styleSheet={{
+                    fontSize: {xs: '12px', md: '16px'}
+                  }}
+                >
                   {mensagem.de}
                 </Text>
 
                 <Text
                   styleSheet={{
                     fontSize: '10px',
-                    margin: '5px 16px',
+                    margin: {xs: '2px 10px', md: '5px 16px'},
                     color: appConfig.theme.colors.neutrals[300],
                   }}
                   tag="span"
@@ -222,7 +238,10 @@ function MessageList(props) {
               </Box>
 
               <Button
-                //onClick={}
+                onClick={(event) => {
+                  event.preventDefault();
+                  removerMensagem(mensagem.id);
+                }}
                 buttonColors={{
                   contrastColor: '#FDFDFD',
                   mainColor: 'rgba(0, 0, 0, 0.0)',
@@ -231,6 +250,7 @@ function MessageList(props) {
                 colorVariant="negative"
                 iconName="FaRegTrashAlt"
               />
+              
             </Box>
             {mensagem.texto}
           </Text>

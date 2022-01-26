@@ -6,6 +6,7 @@ function GlobalStyle() {
         padding: 0;
         box-sizing: border-box;
         list-style: none;
+        font-family: 'Lexend Deca', sans-serif;
       }
       body {
         font-family: 'Lexend Deca', sans-serif;
