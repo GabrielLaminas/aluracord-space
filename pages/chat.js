@@ -92,6 +92,7 @@ export default function PaginaDoChat() {
               onKeyPress={handlePress}
               styleSheet={{
                   width: '100%',
+                  overflowY: 'scroll',
                   border: '0',
                   resize: 'none',
                   borderRadius: '5px',
@@ -174,43 +175,63 @@ function MessageList(props) {
               padding: '6px',
               marginBottom: '12px',
               cursor: 'pointer',
+              wordBreak: 'break-word',
               hover: {
                   backgroundColor: 'rgba(145, 163, 182, 0.09)',
               }
             }}
           >
-          <Box
-            styleSheet={{
-              marginBottom: '8px',
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
-          >
-            <Image
+            <Box
               styleSheet={{
-                width: '45px',
-                height: '45px',
-                borderRadius: '50%',
-                marginRight: '16px',
+                marginBottom: '8px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
               }}
-              src={`https://github.com/gabriellaminas.png`}
-            />
-
-            <Text tag="strong">
-              {mensagem.de}
-            </Text>
-
-            <Text
-              styleSheet={{
-                fontSize: '10px',
-                margin: '5px 16px',
-                color: appConfig.theme.colors.neutrals[300],
-              }}
-              tag="span"
             >
-              {(new Date().toLocaleDateString())}
-            </Text>
-          </Box>
+              <Box 
+                styleSheet={{
+                  display: 'flex',
+                }}
+              >
+                
+                <Image
+                  styleSheet={{
+                    width: '45px',
+                    height: '45px',
+                    borderRadius: '50%',
+                    marginRight: '16px',
+                  }}
+                  src={`https://github.com/gabriellaminas.png`}
+                />
+
+                <Text tag="strong">
+                  {mensagem.de}
+                </Text>
+
+                <Text
+                  styleSheet={{
+                    fontSize: '10px',
+                    margin: '5px 16px',
+                    color: appConfig.theme.colors.neutrals[300],
+                  }}
+                  tag="span"
+                >
+                  {(new Date().toLocaleDateString())}
+                </Text>
+              </Box>
+
+              <Button
+                //onClick={}
+                buttonColors={{
+                  contrastColor: '#FDFDFD',
+                  mainColor: 'rgba(0, 0, 0, 0.0)',
+                  mainColorStrong: 'rgba(255, 107, 107, .35)',
+                }}
+                colorVariant="negative"
+                iconName="FaRegTrashAlt"
+              />
+            </Box>
             {mensagem.texto}
           </Text>
         )
