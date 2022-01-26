@@ -22,7 +22,16 @@ function GlobalStyle() {
       #__next > * {
         flex: 1;
       }
-      /* ./App fit Height */ 
+      /* ./App fit Height */
+      
+      ul::-webkit-scrollbar {
+        width: 5px;
+      }
+      ul::-webkit-scrollbar-thumb{
+        background-color: rgba(36, 39, 52, .7);
+        border-radius: 50px;
+      }
+        
     `}</style>
   );
 }

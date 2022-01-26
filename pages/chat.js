@@ -161,9 +161,7 @@ function MessageList(props) {
           display: 'flex',
           flexDirection: 'column-reverse',
           flex: 1,
-         // boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
           color: appConfig.theme.colors.neutrals["000"],
-          //marginBottom: '16px',
       }}
     >
       {props.mensagens.map((mensagem) => {
@@ -177,7 +175,7 @@ function MessageList(props) {
               marginBottom: '12px',
               cursor: 'pointer',
               hover: {
-                  backgroundColor: appConfig.theme.colors.neutrals[700],
+                  backgroundColor: 'rgba(145, 163, 182, 0.09)',
               }
             }}
           >
