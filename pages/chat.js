@@ -1,10 +1,29 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4Mzk3MiwiZXhwIjoxOTU4ODU5OTcyfQ.gLMEXx2qODLUAtWu6ph4fE7XLFJSna_bWbg9m3-b5cs';
+const SUPABASE_URL = 'https://oigzyahvxvkcijusqdhy.supabase.co';
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const userLocal = () => {
+  if(typeof window !== 'undefined'){
+    return window.localStorage.getItem('user');
+  }
+}
 
 export default function PaginaDoChat() {
   const [mensagem, setMensagem] = React.useState('');
   const [listDeMensagem, setListDeMensagem] = React.useState([]);
+
+  React.useEffect(() => {
+    supabaseClient
+    .from('mensagens')
+    .select('*')
+    .order('id', {ascending: false})
+    .then(({ data }) => setListDeMensagem(data));
+  }, [])
 
   function handleChangeTextArea(event){
     const mensagens = event.target.value; 
@@ -23,11 +42,17 @@ export default function PaginaDoChat() {
   function handleNovaMensagem(novaMensagem){
     if(novaMensagem.length >= 1){
       const mensagemUsuario = {
-        id: listDeMensagem.length + 1,
-        de: 'gabriellaminas',
+        de: userLocal(),
         texto: novaMensagem
       }
-      setListDeMensagem([mensagemUsuario, ...listDeMensagem])
+
+      supabaseClient
+        .from('mensagens')
+        .insert([mensagemUsuario])
+        .then(({data}) => {
+          setListDeMensagem([data[0], ...listDeMensagem])
+        });
+
       setMensagem('');
     }
   }
@@ -130,7 +155,6 @@ export default function PaginaDoChat() {
   );
 };
 
-
 function Header() {
   return (
       <>
@@ -153,15 +177,19 @@ function Header() {
         </Box>
       </>
   )
-}
+};
 
 function MessageList(props) {
-
+  //console.log(props.mensagens[0].id)
   function removerMensagem(id){
     //console.log(id) ta saindo o id que eu clico
-    const mensagemRemovida = props.mensagens.filter((mensagem) => id !== mensagem.id)
+    const mensagemRemovida = props.mensagens.filter((mensagem) => id !== mensagem.id);
     //console.log(mensagemRemovida) ta saindo o novo array com valores excluidos
-    props.setListDeMensagem(mensagemRemovida)
+    supabaseClient
+      .from('mensagens')
+      .delete()
+      .match({id: id})
+      .then(() => props.setListDeMensagem(mensagemRemovida))
   }
 
   return (
@@ -186,6 +214,7 @@ function MessageList(props) {
               marginBottom: '12px',
               cursor: 'pointer',
               wordBreak: 'break-word',
+              lineHeight: '1.4',
               fontSize: {xs: '14px', md: '16px'},
               hover: {
                   backgroundColor: 'rgba(145, 163, 182, 0.09)',
@@ -213,7 +242,7 @@ function MessageList(props) {
                     borderRadius: '50%',
                     marginRight: {xs: '10px', md: '16px'}, 
                   }}
-                  src={`https://github.com/gabriellaminas.png`}
+                  src={`https://github.com/${mensagem.de}.png`}
                 />
 
                 <Text 
@@ -259,4 +288,4 @@ function MessageList(props) {
 
     </Box>
   )
-}
+};
