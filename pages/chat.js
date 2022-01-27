@@ -3,19 +3,29 @@ import React from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4Mzk3MiwiZXhwIjoxOTU4ODU5OTcyfQ.gLMEXx2qODLUAtWu6ph4fE7XLFJSna_bWbg9m3-b5cs';
-const SUPABASE_URL = 'https://oigzyahvxvkcijusqdhy.supabase.co';
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 const userLocal = () => {
   if(typeof window !== 'undefined'){
     return window.localStorage.getItem('user');
   }
 }
 
-export default function PaginaDoChat() {
+export async function getServerSideProps(context) {
+  //Conexão com o SupaBase
+  const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+
+  return {
+      props: {
+          SUPABASE_ANON_KEY,
+          SUPABASE_URL
+      },
+  }
+}
+
+export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
   const [mensagem, setMensagem] = React.useState('');
   const [listDeMensagem, setListDeMensagem] = React.useState([]);
+  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   React.useEffect(() => {
     supabaseClient
@@ -289,3 +299,4 @@ function MessageList(props) {
     </Box>
   )
 };
+
