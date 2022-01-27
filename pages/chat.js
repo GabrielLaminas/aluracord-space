@@ -26,6 +26,7 @@ export async function getServerSideProps(context) {
 export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
   const [mensagem, setMensagem] = React.useState('');
   const [listDeMensagem, setListDeMensagem] = React.useState([]);
+  const [carregando, setCarregando] = React.useState(true);
   supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   React.useEffect(() => {
@@ -33,7 +34,10 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
     .from('mensagens')
     .select('*')
     .order('id', {ascending: false})
-    .then(({ data }) => setListDeMensagem(data));
+    .then(({ data }) => {
+      setListDeMensagem(data);
+      setCarregando(false);
+    });
   }, [])
 
   function handleChangeTextArea(event){
@@ -111,7 +115,7 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
             padding: {xs: '8px', md: '24px'}
         }}
         >
-          <MessageList mensagens={listDeMensagem} setListDeMensagem={setListDeMensagem}/>
+          <MessageList mensagens={listDeMensagem} setListDeMensagem={setListDeMensagem} carregando={carregando}/>
 
           {/*form*/}
           <Box
@@ -191,6 +195,7 @@ function Header() {
 };
 
 function MessageList(props) {
+
   function removerMensagem(id){
     //console.log(id) ta saindo o id que eu clico
     const mensagemRemovida = props.mensagens.filter((mensagem) => id !== mensagem.id);
@@ -201,7 +206,7 @@ function MessageList(props) {
       .match({id: id})
       .then(() => props.setListDeMensagem(mensagemRemovida))
   }
-  
+
   return (
     <Box
       tag="ul"
@@ -210,9 +215,24 @@ function MessageList(props) {
           display: 'flex',
           flexDirection: 'column-reverse',
           flex: 1,
+          position: 'relative',
           color: appConfig.theme.colors.neutrals["000"],
       }}
     >
+      {props.carregando && (
+        <Box
+          styleSheet={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <Text styleSheet={{color: '#9AA5B1', fontSize: {xs: '13px', 'md': '14px'}}}>
+            Carregando mensagens...
+          </Text>
+        </Box>
+      )}
       {props.mensagens.map((mensagem) => {
         return (
           <Text
@@ -251,6 +271,7 @@ function MessageList(props) {
                     height: {xs: '28px', md: '45px'},
                     borderRadius: '50%',
                     marginRight: {xs: '10px', md: '16px'}, 
+                    hover: {border: '2px solid red', transform: 'scale(2, 2)'}
                   }}
                   src={`https://github.com/${mensagem.de}.png`}
                 />
