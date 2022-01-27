@@ -2,6 +2,7 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js';
+let supabaseClient = null;
 
 const userLocal = () => {
   if(typeof window !== 'undefined'){
@@ -25,7 +26,7 @@ export async function getServerSideProps(context) {
 export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
   const [mensagem, setMensagem] = React.useState('');
   const [listDeMensagem, setListDeMensagem] = React.useState([]);
-  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   React.useEffect(() => {
     supabaseClient
@@ -190,7 +191,6 @@ function Header() {
 };
 
 function MessageList(props) {
-  //console.log(props.mensagens[0].id)
   function removerMensagem(id){
     //console.log(id) ta saindo o id que eu clico
     const mensagemRemovida = props.mensagens.filter((mensagem) => id !== mensagem.id);
@@ -201,7 +201,7 @@ function MessageList(props) {
       .match({id: id})
       .then(() => props.setListDeMensagem(mensagemRemovida))
   }
-
+  
   return (
     <Box
       tag="ul"
