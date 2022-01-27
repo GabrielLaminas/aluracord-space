@@ -271,7 +271,6 @@ function MessageList(props) {
                     height: {xs: '28px', md: '45px'},
                     borderRadius: '50%',
                     marginRight: {xs: '10px', md: '16px'}, 
-                    hover: {border: '2px solid red', transform: 'scale(2, 2)'}
                   }}
                   src={`https://github.com/${mensagem.de}.png`}
                 />
