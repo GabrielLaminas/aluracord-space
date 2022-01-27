@@ -10,17 +10,17 @@ const userLocal = () => {
   }
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   //Conexão com o SupaBase
   const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
 
   return {
-      props: {
-          SUPABASE_ANON_KEY,
-          SUPABASE_URL
-      },
-  }
+    props: {
+      SUPABASE_ANON_KEY,
+      SUPABASE_URL,
+    }
+  };
 }
 
 export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
