@@ -28,7 +28,7 @@ export async function getServerSideProps() {
 function escutarMensagemTempoReal(adicionaMensagem){
   return supabaseClient
     .from('mensagens')
-    .on('INSERT', (resposta) => adicionaMensagem(resposta.new))
+    .on('*', (resposta) => adicionaMensagem(resposta))
     .subscribe();
 }
 
@@ -36,6 +36,7 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
   const [mensagem, setMensagem] = React.useState('');
   const [listDeMensagem, setListDeMensagem] = React.useState([]);
   const [carregando, setCarregando] = React.useState(true);
+  
   supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   React.useEffect(() => {
@@ -49,26 +50,24 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
       });
 
     escutarMensagemTempoReal((novaMensagem) => {
-      setListDeMensagem((valorAtualDoList) => {
-        return [novaMensagem, ...valorAtualDoList]
-      })
+      if(novaMensagem.eventType === 'INSERT'){
+        setListDeMensagem((valorAtualDoList) => {
+          return [novaMensagem.new, ...valorAtualDoList];
+        });
+      }
+
+      if(novaMensagem.eventType === 'DELETE'){
+        setListDeMensagem((valorAtualDoList) => {
+          const lista = valorAtualDoList
+            .filter((mensagem) => { 
+              if (mensagem.id != novaMensagem.old.id) return mensagem 
+            });
+          return [...lista];
+        });
+      }
     })
 
-  }, [])
-
-  function handleChangeTextArea(event){
-    const mensagens = event.target.value; 
-    setMensagem(mensagens);
-  }
-
-  function handlePress(event){
-    const enviar = event.key;
-    
-    if(enviar === 'Enter' || enviar === 'NumpadEnter'){
-      event.preventDefault();
-      handleNovaMensagem(mensagem);
-    }
-  }
+  }, []);
 
   function handleNovaMensagem(novaMensagem){
     if(novaMensagem.length >= 1){
@@ -83,6 +82,20 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
         .then(({data}) => data);
 
       setMensagem('');
+    }
+  }
+
+  function handleChangeTextArea(event){
+    const mensagens = event.target.value; 
+    setMensagem(mensagens);
+  }
+
+  function handlePress(event){
+    const enviar = event.key;
+    
+    if(enviar === 'Enter' || enviar === 'NumpadEnter'){
+      event.preventDefault();
+      handleNovaMensagem(mensagem);
     }
   }
 
@@ -219,17 +232,19 @@ function Header() {
   )
 };
 
-function MessageList(props) {
+function MessageList(props) { 
 
   function removerMensagem(id){
     //console.log(id) ta saindo o id que eu clico
     const mensagemRemovida = props.mensagens.filter((mensagem) => id !== mensagem.id);
     //console.log(mensagemRemovida) ta saindo o novo array com valores excluidos
-    supabaseClient
+    const {data} = supabaseClient
       .from('mensagens')
       .delete()
       .match({id: id})
-      .then(() => props.setListDeMensagem(mensagemRemovida))
+      .then({data})
+
+    props.setListDeMensagem(mensagemRemovida);
   }
 
   return (
