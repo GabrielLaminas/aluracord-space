@@ -68,7 +68,7 @@ export default function PaginaInicial() {
             width: '100%', maxWidth: '375px',
             borderRadius: '8px', padding: '32px', margin: '16px',
             boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-            backgroundColor: 'rgba(36, 39, 52, 0.9)', //36 39 52 //50 50 72 0.9
+            backgroundColor: 'rgba(36, 39, 52, 0.9)',
           }}
         >
 
@@ -213,6 +213,7 @@ export default function PaginaInicial() {
               type='submit'
               label='Entrar'
               fullWidth
+              disabled={user.length > 2 ? false : true}
               styleSheet={{marginTop: '5px'}}
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],

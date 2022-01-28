@@ -2,6 +2,8 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js';
+import { ButtonSendSticker } from '../src/Componentes/ButtonSendSticker.js';
+
 let supabaseClient = null;
 
 const userLocal = () => {
@@ -23,6 +25,13 @@ export async function getServerSideProps() {
   };
 }
 
+function escutarMensagemTempoReal(adicionaMensagem){
+  return supabaseClient
+    .from('mensagens')
+    .on('INSERT', (resposta) => adicionaMensagem(resposta.new))
+    .subscribe();
+}
+
 export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
   const [mensagem, setMensagem] = React.useState('');
   const [listDeMensagem, setListDeMensagem] = React.useState([]);
@@ -31,13 +40,20 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
 
   React.useEffect(() => {
     supabaseClient
-    .from('mensagens')
-    .select('*')
-    .order('id', {ascending: false})
-    .then(({ data }) => {
-      setListDeMensagem(data);
-      setCarregando(false);
-    });
+      .from('mensagens')
+      .select('*')
+      .order('id', {ascending: false})
+      .then(({ data }) => {
+        setListDeMensagem(data);
+        setCarregando(false);
+      });
+
+    escutarMensagemTempoReal((novaMensagem) => {
+      setListDeMensagem((valorAtualDoList) => {
+        return [novaMensagem, ...valorAtualDoList]
+      })
+    })
+
   }, [])
 
   function handleChangeTextArea(event){
@@ -64,9 +80,7 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
       supabaseClient
         .from('mensagens')
         .insert([mensagemUsuario])
-        .then(({data}) => {
-          setListDeMensagem([data[0], ...listDeMensagem])
-        });
+        .then(({data}) => data);
 
       setMensagem('');
     }
@@ -122,8 +136,7 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
             as="form"
             styleSheet={{
                 display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex',
+                alignItems: 'center',
             }}
           >
             <TextField
@@ -135,7 +148,6 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
               styleSheet={{
                   width: '100%',
                   overflowY: 'scroll',
-                  border: '0',
                   resize: 'none',
                   borderRadius: '5px',
                   padding: '6px 8px',
@@ -145,7 +157,20 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
               }}
             />
 
-            <Button 
+            <ButtonSendSticker onStickerClick={(sticker) => handleNovaMensagem(':sticker: ' + sticker)} />
+
+            <Button
+              styleSheet={{
+                borderRadius: '50%',
+                minWidth: '48px',
+                minHeight: '48px',
+                fontSize: {xs: '15px', md: '18px'},
+                marginLeft: '8px',
+                marginBottom: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }} 
               iconName="arrowRight"
               onClick={() => handleNovaMensagem(mensagem)}
               buttonColors={{
@@ -158,7 +183,7 @@ export default function PaginaDoChat({SUPABASE_ANON_KEY, SUPABASE_URL}) {
           </Box>
           {/*form*/}
 
-        </Box>
+        </Box>  
         {/*mensagens-user*/}
 
         </Box>
@@ -253,7 +278,7 @@ function MessageList(props) {
           >
             <Box
               styleSheet={{
-                marginBottom: '8px',
+                marginBottom: {xs: 'px', md: '8px'},
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
@@ -311,7 +336,17 @@ function MessageList(props) {
               />
               
             </Box>
-            {mensagem.texto}
+            {mensagem.texto.startsWith(':sticker:')
+              ? (
+                <Image 
+                  src={mensagem.texto.replace(':sticker:', '')} 
+                  styleSheet={{
+                    maxWidth: {xs: '50%', md: '25%'}
+                  }}
+                />
+              )
+              : mensagem.texto
+            }
           </Text>
         )
       })}
@@ -319,4 +354,3 @@ function MessageList(props) {
     </Box>
   )
 };
-
