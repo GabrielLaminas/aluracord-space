@@ -4,6 +4,14 @@
 
 # Imagens e vídeo
 
+![Home Desktop](https://github.com/GabrielLaminas/aluracord-space/blob/main/public/Img/aluracordSpaceDesktop.jpg?raw=true)
+
+![Home Mobile](https://github.com/GabrielLaminas/aluracord-space/blob/main/public/Img/aluracordSpaceHomeMobile.jpg?raw=true)
+
+![Chat Desktop](https://github.com/GabrielLaminas/aluracord-space/blob/main/public/Img/aluracordSpaceChatDesktop.jpg?raw=true)
+
+![Chat Mobile](https://github.com/GabrielLaminas/aluracord-space/blob/main/public/Img/aluracordSpaceChatMobile.jpg?raw=true)
+
 # Tecnológias usadas 
 
   - CSS
@@ -13,4 +21,4 @@
   - SkynexUI
   - Supabase
 
-# Em desenvolvimento...
+# finalizando.. 
