@@ -45,7 +45,7 @@ export default function PaginaInicial() {
 
   function handleSubimitChat(event){
     event.preventDefault();
-    window.localStorage.setItem('user', user);
+    window.localStorage.setItem('user', user.toLowerCase());
     roteamento.push('/chat');
   }
 

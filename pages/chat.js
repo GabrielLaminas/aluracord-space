@@ -232,7 +232,7 @@ function Header() {
   )
 };
 
-function MessageList(props) { 
+function MessageList(props) {
 
   function removerMensagem(id){
     //console.log(id) ta saindo o id que eu clico
@@ -274,6 +274,21 @@ function MessageList(props) {
         </Box>
       )}
       {props.mensagens.map((mensagem) => {
+        const search = "-";
+        const replaceWith = "/";
+        const date = mensagem.created_at
+          .slice(0, mensagem.created_at.indexOf("T"))
+          .split(search)
+          .reverse()
+          .join(replaceWith);
+
+        const utchours = new Date(mensagem.created_at).toLocaleString();
+
+        const hour = utchours.slice(
+          utchours.indexOf("T") + 11,
+          utchours.indexOf("T") + 17
+        )
+
         return (
           <Text
             key={mensagem.id}
@@ -293,7 +308,7 @@ function MessageList(props) {
           >
             <Box
               styleSheet={{
-                marginBottom: {xs: 'px', md: '8px'},
+                marginBottom: '8px',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
@@ -332,23 +347,25 @@ function MessageList(props) {
                   }}
                   tag="span"
                 >
-                  {(new Date().toLocaleDateString())}
+                  {date}
                 </Text>
               </Box>
 
-              <Button
-                onClick={(event) => {
-                  event.preventDefault();
-                  removerMensagem(mensagem.id);
-                }}
-                buttonColors={{
-                  contrastColor: '#FDFDFD',
-                  mainColor: 'rgba(0, 0, 0, 0.0)',
-                  mainColorStrong: 'rgba(255, 107, 107, .35)',
-                }}
-                colorVariant="negative"
-                iconName="FaRegTrashAlt"
-              />
+              {mensagem.de === userLocal() && (
+                <Button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    removerMensagem(mensagem.id);
+                  }}
+                  buttonColors={{
+                    contrastColor: '#FDFDFD',
+                    mainColor: 'rgba(0, 0, 0, 0.0)',
+                    mainColorStrong: 'rgba(255, 107, 107, .35)',
+                  }}
+                  colorVariant="negative"
+                  iconName="FaRegTrashAlt"
+                  />
+              )}
               
             </Box>
             {mensagem.texto.startsWith(':sticker:')
@@ -362,6 +379,17 @@ function MessageList(props) {
               )
               : mensagem.texto
             }
+            <Text
+              styleSheet={{
+                fontSize: '10px',
+                margin: {xs: '2px 10px', md: '5px 8px'},
+                float: 'right',
+                color: appConfig.theme.colors.neutrals[300],
+              }}
+              tag="span"
+            >
+              {hour}
+            </Text>
           </Text>
         )
       })}
