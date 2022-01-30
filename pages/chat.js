@@ -274,20 +274,10 @@ function MessageList(props) {
         </Box>
       )}
       {props.mensagens.map((mensagem) => {
-        const search = "-";
-        const replaceWith = "/";
-        const date = mensagem.created_at
-          .slice(0, mensagem.created_at.indexOf("T"))
-          .split(search)
-          .reverse()
-          .join(replaceWith);
 
-        const utchours = new Date(mensagem.created_at).toLocaleString();
-
-        const hour = utchours.slice(
-          utchours.indexOf("T") + 11,
-          utchours.indexOf("T") + 17
-        )
+        const dbDate = new Date(mensagem.created_at).toLocaleString();
+        const data = dbDate.slice(0, 10);
+        const hora = dbDate.slice(11, 16);
 
         return (
           <Text
@@ -347,7 +337,7 @@ function MessageList(props) {
                   }}
                   tag="span"
                 >
-                  {date}
+                  {data}
                 </Text>
               </Box>
 
@@ -388,7 +378,7 @@ function MessageList(props) {
               }}
               tag="span"
             >
-              {hour}
+              {hora}
             </Text>
           </Text>
         )
