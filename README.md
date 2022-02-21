@@ -21,4 +21,12 @@
   - SkynexUI
   - Supabase
 
-# finalizando.. 
+# Aprendizado
+
+  Essa foi a minha primeira imersão React.js da Alura. Nela eu tive o primeiro contato com ReactJs, NextJs, Storybook, SkynexUi e Supabase.
+  Eu tive diversas dúvidas principalmente com o supabase, na qual futuramente pretendo estudar e fazer projetos utilizando o mesmo. 
+  Meu objetivo é me aprofundar mais em ReactJs e NextJs. Então está imersão foi de grande aprendizado.
+
+# Social
+
+  - Linkedin: [Gabriel F. Laminas](https://www.linkedin.com/in/gabriel-de-freitas-laminas-1505661b9/)
